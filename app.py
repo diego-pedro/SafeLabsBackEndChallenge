@@ -7,14 +7,16 @@ from spotipy.oauth2 import SpotifyOAuth
 
 server_host = "http://127.0.0.1:5000"
 
-# Create Spotipy instance for tracks search function.
-sp = spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.getenv('SPOTIPY_CLIENT_ID'),
-                                               client_secret=os.getenv('SPOTIPY_CLIENT_SECRET'),
-                                               redirect_uri=server_host))
 
-
+# Configuration function for the app
 def server_setup():
+    # Configure environment variables
     load_dotenv()
+
+    # Create Spotipy instance for tracks search function.
+    return spotipy.Spotify(auth_manager=SpotifyOAuth(client_id=os.getenv('SPOTIPY_CLIENT_ID'),
+                                                     client_secret=os.getenv('SPOTIPY_CLIENT_SECRET'),
+                                                     redirect_uri=server_host))
 
 
 # API Endpoints
@@ -41,7 +43,7 @@ def get_genre(temp_celsius):
         return "party"
     elif 15 < temp_celsius < 30:
         return "pop"
-    elif 15 > temp_celsius > 10:
+    elif 10 < temp_celsius < 15:
         return "rock"
     else:
         return "classical music"
@@ -58,7 +60,9 @@ def playlist_by_city_climate(city):
     }
     weather_response = requests.get(url=OpenWeatherUrl, params=request_params)
 
-    # TODO: Re-route to error page or api command info
+    # If the response fails, redirect the user to the main page
+    # containing api request info
+
     if weather_response.status_code != 200:
         return render_template(template_name_or_list="index.html")
 
@@ -88,7 +92,9 @@ def playlist_by_lat_lon_climate(lat, lon):
     }
     weather_response = requests.get(url=OpenWeatherUrl, params=request_params)
 
-    # TODO: Re-route to error page or api command info
+    # If the response fails, redirect the user to the main page
+    # containing api request info
+
     if weather_response.status_code != 200:
         return render_template(template_name_or_list="index.html")
 
@@ -109,5 +115,5 @@ def playlist_by_lat_lon_climate(lat, lon):
 
 
 if __name__ == "__main__":
-    server_setup()
+    sp = server_setup()
     app.run()
