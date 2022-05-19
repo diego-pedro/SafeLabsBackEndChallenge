@@ -30,8 +30,9 @@ app.config["DEBUG"] = True
 
 # Route for Rest API Main Landing Page
 @app.route("/")
+@app.route('/index.html')
 def home():
-    return render_template(template_name_or_list="index.html")
+    return render_template(template_name_or_list="index.html", error_message="")
 
 
 # Function to get the genre for the search in spotify.
@@ -64,7 +65,7 @@ def playlist_by_city_climate(city):
     # containing api request info
 
     if weather_response.status_code != 200:
-        return render_template(template_name_or_list="index.html")
+        return render_template(template_name_or_list="index.html", error_message="City not Found!")
 
     weather_content = weather_response.json()
 
@@ -96,7 +97,7 @@ def playlist_by_lat_lon_climate(lat, lon):
     # containing api request info
 
     if weather_response.status_code != 200:
-        return render_template(template_name_or_list="index.html")
+        return render_template(template_name_or_list="index.html", error_message="Coordinates not Found!")
 
     weather_content = weather_response.json()
 
